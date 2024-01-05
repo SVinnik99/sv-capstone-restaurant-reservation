@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { listReservations } from "../utils/api";
-import { today,previous,next } from "../utils/date-time";
+import { today, previous, next } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationView from "./ReservationView"
+import useQuery from "../utils/useQuery";
 import "./Dashboard.css"
+
 
 /**
  * Defines the dashboard page.
@@ -12,9 +15,14 @@ import "./Dashboard.css"
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
+
+  let history = useHistory()
+  const query = useQuery()
+
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [currentDate, setCurrentDate] = useState(today())
+  const [queryDate, setQueryDate] = useState(query.get("date"))
+  let [currentDate, setCurrentDate] = useState(today())
 
   useEffect(loadDashboard, [date]);
 
@@ -27,22 +35,34 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  // gets the current date from the parameter
+  
+
+  // this use effect checks to the route, if it specifies a date, change the current date to the parameter
+  useEffect(() => {
+
+    if (queryDate) {
+      setCurrentDate(queryDate);
+    }
+
+  }, [queryDate]);
+
   // Increments the day by 1 forwards
-  function handleNext(){
+  function handleNext() {
     setCurrentDate(next(currentDate))
   }
-// Increments the day by 1 backwards
-function handlePrevious(){
-  setCurrentDate(previous(currentDate))
-}
-// Brings you back to todays date
-function handleToday(){
-  setCurrentDate(today())
-}
+  // Increments the day by 1 backwards
+  function handlePrevious() {
+    setCurrentDate(previous(currentDate))
+  }
+  // Brings you back to todays date, clear query param
+  function handleToday() {
+    setCurrentDate(today())
+    history.push("/dashboard")
+    
+  }
 
 
-
- 
   return (
     <main>
       <h1>Dashboard</h1>
@@ -50,9 +70,9 @@ function handleToday(){
         <h4 >Reservations for date: {currentDate} </h4>
       </div>
       <div>
-      <button  onClick={()=>handlePrevious()}type="button" class="btn btn-secondary btn-sm">Previous day</button>
-      <button onClick={()=>handleToday()}type="button" class="btn btn-primary btn-sm">Today</button>
-      <button onClick={()=>handleNext()}type="button" class="btn btn-secondary btn-sm">Next day</button>
+        <button onClick={() => handlePrevious()} type="button" class="btn btn-secondary btn-sm">Previous day</button>
+        <button onClick={() => handleToday()} type="button" class="btn btn-primary btn-sm">Today</button>
+        <button onClick={() => handleNext()} type="button" class="btn btn-secondary btn-sm">Next day</button>
       </div>
       <ErrorAlert error={reservationsError} />
       {/* {JSON.stringify(reservations)} */}
@@ -68,11 +88,11 @@ function handleToday(){
           </tr>
         </thead>
         <tbody>
-          {reservations.map((reservation, index)=>
-          <ReservationView 
-                reservation ={reservation}
-                currentDate = {currentDate}
-                key = {index}/> )}
+          {reservations.map((reservation, index) =>
+            <ReservationView
+              reservation={reservation}
+              currentDate={currentDate}
+              key={index} />)}
         </tbody>
       </table>
 
