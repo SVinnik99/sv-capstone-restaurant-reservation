@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import { today,previous,next } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
+import ReservationView from "./ReservationView"
 import "./Dashboard.css"
 
 /**
@@ -42,16 +43,35 @@ function handleToday(){
   return (
     <main>
       <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date: {currentDate} </h4>
+      <div >
+        <h4 >Reservations for date: {currentDate} </h4>
       </div>
       <div>
-      <button  onClick={()=>handlePrevious()}type="button" class="btn btn-secondary btn-sm">Previous</button>
+      <button  onClick={()=>handlePrevious()}type="button" class="btn btn-secondary btn-sm">Previous day</button>
       <button onClick={()=>handleToday()}type="button" class="btn btn-primary btn-sm">Today</button>
-      <button onClick={()=>handleNext()}type="button" class="btn btn-secondary btn-sm">Next</button>
+      <button onClick={()=>handleNext()}type="button" class="btn btn-secondary btn-sm">Next day</button>
       </div>
       <ErrorAlert error={reservationsError} />
       {JSON.stringify(reservations)}
+      <table>
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Mobile Number</th>
+            <th>Reservation Date</th>
+            <th>Reservation Time</th>
+            <th>Number of People</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reservations.map((reservation, index)=>
+          <ReservationView 
+                reservation ={reservation}
+                key = {index}/> )}
+        </tbody>
+      </table>
+
     </main>
   );
 }
