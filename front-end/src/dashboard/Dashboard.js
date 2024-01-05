@@ -75,7 +75,6 @@ function Dashboard({ date }) {
         <button onClick={() => handleNext()} type="button" class="btn btn-secondary btn-sm">Next day</button>
       </div>
       <ErrorAlert error={reservationsError} />
-      {/* {JSON.stringify(reservations)} */}
       <table>
         <thead>
           <tr>

@@ -29,7 +29,8 @@ function NewReservation() {
         event.preventDefault()
 
         createReservation(reservation).then(() => {
-            history.push("/");
+            event.preventDefault()
+            history.push(`/dashboard/?date=${reservation.reservation_date}`);
         });
     };
 
