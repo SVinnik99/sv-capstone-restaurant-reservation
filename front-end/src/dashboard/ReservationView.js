@@ -2,11 +2,10 @@ import React from "react";
 import "./ReservationView.css"
 
 
-function ReservationList({reservation}){
+function ReservationView({reservation, currentDate}){
 
-
-
-
+// if the reservation date is equal to todays date, return all the info
+if(reservation.reservation_date === currentDate){
     return (
         <tr>
             <td>{reservation.first_name}</td>
@@ -17,6 +16,13 @@ function ReservationList({reservation}){
             <td>{reservation.people}</td>
         </tr>
     )
+    // otherwise return an empty table
+}else{
+    return(
+       <></>
+    )
+}
+    
 }
 
-export default ReservationList;
+export default ReservationView;

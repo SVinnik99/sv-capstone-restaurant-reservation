@@ -39,6 +39,9 @@ function handlePrevious(){
 function handleToday(){
   setCurrentDate(today())
 }
+
+
+
  
   return (
     <main>
@@ -52,7 +55,7 @@ function handleToday(){
       <button onClick={()=>handleNext()}type="button" class="btn btn-secondary btn-sm">Next day</button>
       </div>
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      {/* {JSON.stringify(reservations)} */}
       <table>
         <thead>
           <tr>
@@ -68,6 +71,7 @@ function handleToday(){
           {reservations.map((reservation, index)=>
           <ReservationView 
                 reservation ={reservation}
+                currentDate = {currentDate}
                 key = {index}/> )}
         </tbody>
       </table>
