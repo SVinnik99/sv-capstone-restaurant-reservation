@@ -84,7 +84,7 @@ function NewReservation() {
                 <label>Number of people in the party</label>
                 <input
                     id="people"
-                    type="text"
+                    type="number"
                     name="people"
                     onChange={handleChange}
                     value={reservation.people}
