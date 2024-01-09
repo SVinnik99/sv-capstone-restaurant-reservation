@@ -14,7 +14,7 @@ import "./Dashboard.css"
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date }) {
+function Dashboard() {
 
   let history = useHistory()
   const query = useQuery()
@@ -24,12 +24,12 @@ function Dashboard({ date }) {
   const [queryDate, setQueryDate] = useState(query.get("date"))
   let [currentDate, setCurrentDate] = useState(today())
 
-  useEffect(loadDashboard, [date]);
+  useEffect(loadDashboard, [currentDate]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date }, abortController.signal)
+    listReservations(currentDate, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
@@ -75,6 +75,7 @@ function Dashboard({ date }) {
         <button onClick={() => handleNext()} type="button" class="btn btn-secondary btn-sm">Next day</button>
       </div>
       <ErrorAlert error={reservationsError} />
+
       <table>
         <thead>
           <tr>
