@@ -1,0 +1,9 @@
+form{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+h1{
+    font-size:30px ;
+}
