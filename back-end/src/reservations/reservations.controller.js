@@ -6,16 +6,34 @@ const { response } = require("../app");
 
 // Validations
 
-function bodyDataHas(propertyName) {
+function bodyDataHas(...propertyName) {
   return function (req, res, next) {
     const { data = {} } = req.body;
 
-    if (data[propertyName]) {
-      return next();
+    try {
+      propertyName.forEach((property) => {
+        if (!data[property]) {
+          const error = new Error(`A ${property} property is required.`);
+          error.status = 400;
+          throw error;
+        }
+      });
+      next();
+    } catch (error) {
+      next(error);
     }
-    next({ status: 400, message: `Must include a ${propertyName} property.` });
   };
 }
+// validates that the required properties are not missing
+
+const requiredProperties = bodyDataHas(
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "reservation_time",
+  "reservation_date",
+  "people"
+);
 
 // Validates that date input is a date
 
@@ -64,6 +82,36 @@ function peopleIsANumber(req, res, next) {
   });
 }
 
+// Checks if the day is tuesday
+function notTuesday(req, res, next) {
+  const date = req.body.data.reservation_date;
+  const weekday = new Date(date).getDay();
+
+  if (weekday === 1) {
+    return next({
+      status: 400,
+      message: "Restaurant is closed on Tuesdays.",
+    });
+  }
+  next();
+}
+
+// Function
+function notInThePast(req,res,next){
+  const {reservation_date, reservation_time} = req.body.data;
+  const today = Date.now();
+  const date = new Date(`${reservation_date} ${reservation_time}`).valueOf()
+
+  if(date > today){
+    return next();
+  }
+  next({
+    status:400,
+    message:"Reservation date has to be in the future."
+  })
+}
+//#######################################################
+
 /**
  * List handler for reservation resources
  */
@@ -110,15 +158,12 @@ async function create(req, res) {
 module.exports = {
   list,
   create: [
-    asyncErrorBoundary(bodyDataHas("first_name")),
-    asyncErrorBoundary(bodyDataHas("last_name")),
-    asyncErrorBoundary(bodyDataHas("mobile_number")),
-    asyncErrorBoundary(bodyDataHas("reservation_time")),
-    asyncErrorBoundary(bodyDataHas("reservation_date")),
-    asyncErrorBoundary(bodyDataHas("people")),
+    asyncErrorBoundary(requiredProperties),
     asyncErrorBoundary(peopleIsANumber),
     asyncErrorBoundary(dateIsValid),
     asyncErrorBoundary(timeIsValid),
+    asyncErrorBoundary(notTuesday),
+    asyncErrorBoundary(notInThePast),
     create,
   ],
 };

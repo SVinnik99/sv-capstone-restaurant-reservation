@@ -2,10 +2,11 @@ import { Link, useHistory } from "react-router-dom";
 import React, { useState } from "react";
 import { createReservation } from "../utils/api";
 import "./NewReservation.css";
+import ErrorAlert from "../layout/ErrorAlert";
 
 function NewReservation() {
   const history = useHistory();
-
+  const [reservationError, setReservationError] = useState(false);
   const [reservation, setReservation] = useState({
     first_name: "",
     last_name: "",
@@ -25,21 +26,28 @@ function NewReservation() {
       [name]: value,
     }));
   };
-  const handleSubmit = (event) => {
-    console.log(reservation);
-
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    const abortController = new AbortController();
 
-    createReservation(reservation).then(() => {
-      event.preventDefault();
-      //goes back to the reservation date set in the form
-      history.push(`/dashboard/?date=${reservation.reservation_date}`);
-    });
+    try {
+     await createReservation(reservation).then(() => {
+        event.preventDefault();
+        //goes back to the reservation date set in the form
+        history.push(`/dashboard/?date=${reservation.reservation_date}`);
+      });
+    } catch (error) {
+      setReservationError(error);
+    }
+    return () => abortController.abort();
   };
 
   return (
+    <>
+      
     <div>
       <h1>Create Deck</h1>
+
       <form onSubmit={handleSubmit}>
         <label>First Name</label>
         <input
@@ -103,6 +111,9 @@ function NewReservation() {
         <button type="submit">Submit</button>
       </form>
     </div>
+  
+    <ErrorAlert error={reservationError} />
+    </>
   );
 }
 
