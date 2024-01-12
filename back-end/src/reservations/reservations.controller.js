@@ -96,7 +96,8 @@ function notTuesday(req, res, next) {
   next();
 }
 
-// Function
+// Function that checks the date is only in the future
+
 function notInThePast(req,res,next){
   const {reservation_date, reservation_time} = req.body.data;
   const today = Date.now();
@@ -110,6 +111,24 @@ function notInThePast(req,res,next){
     message:"Reservation date has to be in the future."
   })
 }
+
+// Function to check if the reservation is within business hours
+
+function isWithinOpenHours(req, res, next) {
+  let openingTime = "10:30";
+  let closingTime = "21:30";
+
+  let { reservation_time } = req.body.data;
+  console.log("time", reservation_time);
+  if (reservation_time < openingTime || reservation_time > closingTime) {
+    return next({
+      status: 400,
+      message: "Reservation can only be between 10:30 AM and 9:30 PM.",
+    });
+  }
+  next();
+}
+
 //#######################################################
 
 /**
@@ -164,6 +183,7 @@ module.exports = {
     asyncErrorBoundary(timeIsValid),
     asyncErrorBoundary(notTuesday),
     asyncErrorBoundary(notInThePast),
+    asyncErrorBoundary(isWithinOpenHours),
     create,
   ],
 };
