@@ -1,4 +1,4 @@
-import { Link, useHistory } from "react-router-dom";
+import {  useHistory } from "react-router-dom";
 import React, { useState } from "react";
 import { createReservation } from "../utils/api";
 import "./NewReservation.css";
@@ -103,6 +103,7 @@ function NewReservation() {
           required
           min="1"
         />
+        
 
         <button type="button" onClick={() => history.push("/")}>
           Cancel

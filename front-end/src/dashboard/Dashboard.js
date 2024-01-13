@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { listReservations } from "../utils/api";
 import { today, previous, next } from "../utils/date-time";
@@ -36,7 +36,7 @@ function Dashboard() {
   }
 
   // gets the current date from the parameter
-  
+
 
   // this use effect checks to the route, if it specifies a date, change the current date to the parameter
   useEffect(() => {
@@ -59,7 +59,7 @@ function Dashboard() {
   function handleToday() {
     setCurrentDate(today())
     history.push("/dashboard")
-    
+
   }
 
 
@@ -69,10 +69,12 @@ function Dashboard() {
       <div >
         <h4 >Reservations for date: {currentDate} </h4>
       </div>
-      <div>
-        <button onClick={() => handlePrevious()} type="button" class="btn btn-secondary btn-sm">Previous day</button>
-        <button onClick={() => handleToday()} type="button" class="btn btn-primary btn-sm">Today</button>
-        <button onClick={() => handleNext()} type="button" class="btn btn-secondary btn-sm">Next day</button>
+
+
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button onClick={() => handlePrevious()} type="button" class="btn btn-secondary">Previous Day</button>
+        <button onClick={() => handleToday()} type="button" class="btn btn-primary">Today</button>
+        <button button onClick={() => handleNext()} type="button" class="btn btn-secondary">Next Day</button>
       </div>
       <ErrorAlert error={reservationsError} />
 
@@ -85,6 +87,7 @@ function Dashboard() {
             <th>Reservation Date</th>
             <th>Reservation Time</th>
             <th>Number of People</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

@@ -14,6 +14,7 @@ if(reservation.reservation_date === currentDate){
             <td>{reservation.reservation_date}</td>
             <td>{reservation.reservation_time}</td>
             <td>{reservation.people}</td>
+            <button type="button" class="btn btn-info btn-sm">Seat</button>
         </tr>
     )
     // otherwise return an empty table
