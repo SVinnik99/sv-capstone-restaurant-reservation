@@ -1,6 +1,7 @@
 import {  useHistory } from "react-router-dom";
 import React, { useState } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
+import { createTable } from "../utils/api";
 import "./NewTable.css"
 
 

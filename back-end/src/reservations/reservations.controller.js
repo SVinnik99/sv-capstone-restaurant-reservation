@@ -98,17 +98,17 @@ function notTuesday(req, res, next) {
 
 // Function that checks the date is only in the future
 
-function notInThePast(req,res,next){
-  const {reservation_date, reservation_time} = req.body.data;
+function notInThePast(req, res, next) {
+  const { reservation_date, reservation_time } = req.body.data;
   const today = Date.now();
   const date = new Date(`${reservation_date} ${reservation_time}`).valueOf()
 
-  if(date > today){
+  if (date > today) {
     return next();
   }
   next({
-    status:400,
-    message:"Reservation date has to be in the future."
+    status: 400,
+    message: "Reservation date has to be in the future."
   })
 }
 
@@ -129,6 +129,21 @@ function isWithinOpenHours(req, res, next) {
   next();
 }
 
+//function to check if the reservation exists
+
+async function reservationExists(req, res, next) {
+  const { reservation_id } = req.params;
+
+  const reservation = await service.read(reservation_id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Reservation ${reservation_id} not found`,
+  });
+}
 //#######################################################
 
 /**
@@ -164,6 +179,7 @@ async function list(req, res) {
   }
 }
 
+//function to create a new reservation
 async function create(req, res) {
   const newReservation = await service.create(req.body.data);
 
@@ -172,6 +188,12 @@ async function create(req, res) {
   res.status(201).json({
     data: newReservation,
   });
+}
+
+//function to read a sepcific reservation by ID
+function read(req, res, next) {
+  const data = res.locals.reservation;
+  res.status(200).json({ data });
 }
 
 module.exports = {
@@ -186,4 +208,5 @@ module.exports = {
     asyncErrorBoundary(isWithinOpenHours),
     create,
   ],
+  read: [asyncErrorBoundary(reservationExists), read]
 };

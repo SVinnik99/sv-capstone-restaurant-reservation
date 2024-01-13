@@ -15,6 +15,13 @@ function list() {
     .select("*")
 }
 
+function read(reservation_id) {
+    return knex("reservations")
+      .select("*")
+      .where({reservation_id})
+      .then((result) => result[0]);
+  }
+
 module.exports = {
-    create, list
+    create, list,read
 }
