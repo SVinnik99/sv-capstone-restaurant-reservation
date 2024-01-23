@@ -1,8 +1,9 @@
 
 
-.btn{
-    margin: 5px;
+.button{
+
     justify-content: center;
+    margin-top: 10px;
     
 }
 
@@ -19,4 +20,8 @@ main div h4{
     justify-content: center;
   
  
+}
+
+div{
+    margin-bottom: 15px;
 }

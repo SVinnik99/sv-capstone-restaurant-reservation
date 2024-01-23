@@ -31,6 +31,7 @@ function Routes() {
       <Route>
         <NewTable path = "/tables/new"/>
       </Route>
+      
       <Route>
         <NotFound />
       </Route>

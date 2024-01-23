@@ -7,6 +7,7 @@ import "./NewTable.css"
 
 function NewTable() {
     const history = useHistory()
+    const [tableError, setTableError] = useState(false);
 
     const [table, setTable] = useState({
         table_name: "",
@@ -16,6 +17,10 @@ function NewTable() {
     const handleChange = (event) => {
         let { name, value } = event.target
 
+        if (name === "capacity") {
+            value = Number(value);
+          }
+          
         setTable((previousData) => ({
             ...previousData,
             [name]: value,
@@ -23,17 +28,29 @@ function NewTable() {
 
     }
 
-    const handleSubmit = (event) => {
-        event.preventDefault()
-        history.push("/")
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+    const abortController = new AbortController();
 
-        console.log(table)
+    try {
+        console.log('about to submit',table)
+     await createTable(table).then(() => {
+        event.preventDefault();
+        console.log('submitted', table)
+        //goes back to the reservation date set in the form
+        history.push("/dashboard");
+      });
+    } catch (error) {
+      setTableError(error);
+    }
+    return () => abortController.abort();
     }
 
 
     return (
 
         <>
+        <ErrorAlert error={tableError}/>
             <h1>New Table</h1>
             <form onSubmit={handleSubmit}>
                 <label>Table Name</label>

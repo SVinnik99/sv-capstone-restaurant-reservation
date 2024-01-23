@@ -7,7 +7,7 @@ import formatReservationTime from "./format-reservation-date";
 
 // "https://restaurant-reservation-backend-k5h3.onrender.com/"
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5001" ;
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
 
 /**
  * Defines the default headers for these functions to work with `json-server`
@@ -83,6 +83,16 @@ export async function createReservation(reservation, signal) {
 
 }
 
+export async function listTables(params, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  // Object.entries(params).forEach(([key, value]) =>
+  //   url.searchParams.append(key, value.toString())
+  // );
+  return await fetchJson(url, { headers, signal }, [])
+
+}
+
+
 export async function createTable(table, signal) {
   const url = `${API_BASE_URL}/tables`;
   const options = {
@@ -92,5 +102,5 @@ export async function createTable(table, signal) {
     signal,
   };
 
-  return await fetchJson(url, options);
+  return await fetchJson(url, options, signal);
 }

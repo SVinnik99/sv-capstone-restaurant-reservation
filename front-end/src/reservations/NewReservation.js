@@ -34,7 +34,7 @@ function NewReservation() {
      await createReservation(reservation).then(() => {
         event.preventDefault();
         //goes back to the reservation date set in the form
-        history.push(`/dashboard/?date=${reservation.reservation_date}`);
+        history.push(`/dashboard?date=${reservation.reservation_date}`);
       });
     } catch (error) {
       setReservationError(error);
