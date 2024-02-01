@@ -4,7 +4,7 @@ import { listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { updateSeat } from "../utils/api";
 
-function Seating() {
+function SeatForm() {
   const [tables, setTables] = useState([]);
   const [error, setError] = useState(null);
   const [tableToBeSeated, setTableToBeSeated] = useState({});
@@ -44,10 +44,9 @@ function Seating() {
 
   return (
     <>
-
       <ErrorAlert error={error} />
       <form onSubmit={handleSubmit}>
-        <label htmlFor="table_id">Select table to be seated at:</label>
+        <label htmlFor="table_id">Select table:</label>
         <select
           name="table_id"
           id="table_id"
@@ -65,7 +64,7 @@ function Seating() {
         <br />
         <button className="btn btn-primary">Submit</button>
         <button
-          type="button"
+          type="submit"
           className="btn btn-secondary ml-2"
           onClick={handleCancel}
         >
@@ -76,5 +75,4 @@ function Seating() {
   );
 }
 
-
-export default Seating;
+export default SeatForm;

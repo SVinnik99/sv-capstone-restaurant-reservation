@@ -1,5 +1,5 @@
-# Capstone: Restaurant Reservation System Backend
+Restaurant Reservation System Back-end
 
-This starter code for the backend of the capstone project in the Thinkful curriculum.
+This is code for the back-end of the Periodic Tables application.
 
-See [../README.md](../README.md) for detailed instructions.
+See [../README.md](../README.md) for more details.

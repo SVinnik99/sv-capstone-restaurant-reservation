@@ -1,0 +1,27 @@
+/* Form Styling */
+
+.search-input-field {
+    width: 23%
+}
+
+input::placeholder {
+    font-size: 15px;
+}
+
+/* Fonts and backgrounds */
+
+p, h1, h2, h3, h4, button {
+    font-family: "Roboto", "Helvetica", sans-serif;
+}
+
+.btn-munsell {
+    background-color: #348AA7;
+    color: white;
+}
+
+.background-cosmic-latte {
+    background-color: #F8F4E3;
+}
+
+
+

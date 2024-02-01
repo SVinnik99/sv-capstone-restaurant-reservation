@@ -4,7 +4,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { deleteTableAssignment } from "../utils/api";
 import { updateReservationStatus, listTables } from "../utils/api";
 
-function TableView({ table }) {
+function TableList({ table }) {
   const [currentTable, setCurrentTable] = useState(table);
   const history = useHistory();
   const [error, setError] = useState(null);
@@ -76,4 +76,4 @@ function TableView({ table }) {
   );
 }
 
-export default TableView;
+export default TableList;
