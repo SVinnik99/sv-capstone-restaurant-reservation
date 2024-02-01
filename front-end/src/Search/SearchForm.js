@@ -30,11 +30,18 @@ function SearchForm() {
         numberToBeSearched,
         abortController.signal
       );
+
+      if (returnedReservations.length === 0) {
+        // No matching reservations found
+        throw new Error('No reservations found');
+      }
+
       setReservations(returnedReservations);
       history.push("/search");
     } catch (error) {
       setReservationsError(error);
     }
+
     return () => abortController.abort();
   };
 
@@ -46,16 +53,18 @@ function SearchForm() {
         <input
           name="mobile_number"
           type="search"
-          value={numberToBeSearched.value}
-          pattern="[0-9]{10}"
+          value={numberToBeSearched.mobile_number}
           placeholder="Enter a customer's phone number"
           minLength="10"
           maxLength="10"
           className="ml-2 search-input-field"
           onChange={handleChange}
         />
-        <button type="submit" className="btn btn-primary ml-2">Find</button>
+        <button type="submit" className="btn btn-primary ml-2">
+          Find
+        </button>
       </form>
+
       {reservations && reservations.length ? (
         <div>
           <table className="table table-striped">
@@ -79,9 +88,7 @@ function SearchForm() {
           </table>
         </div>
       ) : (
-        <>
-          <ErrorAlert error={reservationsError} />
-        </>
+        <></>
       )}
     </>
   );

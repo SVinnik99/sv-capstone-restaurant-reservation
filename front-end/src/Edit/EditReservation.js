@@ -41,15 +41,21 @@ function EditReservation() {
   const handleSubmit = async (event) => {
     const abortController = new AbortController();
     event.preventDefault();
-    await updateReservation({
-      ...currentReservation,
-      people: Number(currentReservation.people),
-    })
-      .then((response) => {
-        setCurrentReservation({ ...response });
-        history.push(`/dashboard?date=${currentReservation.reservation_date}`);
+    try {
+      await updateReservation({
+        ...currentReservation,
+        people: Number(currentReservation.people),
       })
-      .catch(setError);
+        .then((response) => {
+          setCurrentReservation({ ...response });
+        })
+
+        .catch(setError);
+    } catch (error) {
+      setError(error);
+    }
+
+    history.push(`/dashboard?date=${currentReservation.reservation_date}`);
     return () => abortController.abort();
   };
 
