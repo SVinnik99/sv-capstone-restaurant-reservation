@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
-import { listTables } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { updateSeat } from "../utils/api";
 
@@ -11,6 +11,8 @@ function SeatForm() {
   const history = useHistory();
   const { reservation_id } = useParams();
 
+
+
   useEffect(() => {
     const abortController = new AbortController();
     setError(null);
@@ -18,7 +20,7 @@ function SeatForm() {
     return () => abortController.abort();
   }, []);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const abortController = new AbortController();
     const tableId = Number(tableToBeSeated);
@@ -31,9 +33,9 @@ function SeatForm() {
         const newTables = tables.map((table) => {
           return table.table_id === response.table_id ? response : table;
         });
-        setTables(newTables);
-        history.push("/dashboard");
-      })
+          setTables(newTables)
+          history.push("/dashboard")
+      })     
       .catch(setError);
     return () => abortController.abort();
   };
@@ -62,9 +64,9 @@ function SeatForm() {
         </select>
         <br />
         <br />
-        <button className="btn btn-primary">Submit</button>
+        <button className="btn btn-primary" type="submit">Submit</button>
         <button
-          type="submit"
+      
           className="btn btn-secondary ml-2"
           onClick={handleCancel}
         >

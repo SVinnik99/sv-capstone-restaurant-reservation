@@ -17,7 +17,7 @@
     "start:dev": "npx concurrently \"npm run start:dev --prefix ./back-end\" \"npm start --prefix ./front-end\" ",
     "test": "npm run test:frontend && npm run test:backend",
     "test:backend": "npm test --prefix ./back-end",
-    "test:frontend": "npm test --prefix ./front-end",
+    "test:frontend": "npm test --prefix ./front-end ",
     "test:1": "npx npm-run-all -s test:1:*",
     "test:1:frontend": "npm run test:1 --prefix ./front-end",
     "test:1:backend": "npm run test:1 --prefix ./back-end",

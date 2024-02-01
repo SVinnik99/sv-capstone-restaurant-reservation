@@ -146,7 +146,7 @@ function reservationTimeIsATime(req, res, next) {
 function notTuesday(req, res, next) {
   const date = req.body.data.reservation_date;
   const weekday = new Date(date).getUTCDay();
-  console.log("weekday", weekday);
+ 
   if (weekday === 2) {
     return next({
       status: 400,
@@ -176,7 +176,7 @@ function isWithinOpenHours(req, res, next) {
   let closingTime = "21:30";
 
   let { reservation_time } = req.body.data;
-  console.log("time", reservation_time);
+ 
   if (reservation_time < openingTime || reservation_time > closingTime) {
     return next({
       status: 400,
