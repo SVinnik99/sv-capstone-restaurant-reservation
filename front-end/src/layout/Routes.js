@@ -9,7 +9,7 @@ import tables from "../tables";
 import Seat from "../Seat";
 import Search from "../Search";
 import Edit from "../Edit";
-import EditReservationForm from "../Reservations/EditReservationForm";
+import EditReservationForm from "../reservations/EditReservationForm";
 
 
 /**
