@@ -47,7 +47,7 @@ function Routes() {
         <Search />
       </Route>
       <Route exact={true} path="/tables/new">
-        <Tables />
+        <tables />
       </Route>
       <Route>
         <NotFound />
