@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router";
 import { getReservation, updateReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import EditReservationForm  from "../reservations/EditReservationForm"
 import ReservationForm from "../reservations/NewReservation";
+
 
 function EditReservation() {
   const { reservation_id } = useParams();
@@ -62,7 +64,7 @@ function EditReservation() {
   return (
     <>
       <ErrorAlert error={error} />
-      <ReservationForm
+      <EditReservationForm
         history={history}
         reservation={currentReservation}
         handleChange={handleChange}
