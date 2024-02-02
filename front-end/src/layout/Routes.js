@@ -4,8 +4,8 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
-import NewReservation from "../Reservations/NewReservation";
-import Tables from "../Tables";
+import NewReservation from "../reservations/NewReservation";
+import tables from "../tables";
 import Seat from "../Seat";
 import Search from "../Search";
 import Edit from "../Edit";
@@ -49,7 +49,7 @@ function Routes() {
         <Search />
       </Route>
       <Route exact={true} path="/tables/new">
-        <Tables />
+        <tables />
       </Route>
       <Route>
         <NotFound />

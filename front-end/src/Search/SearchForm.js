@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import "../App.css";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import ReservationDetail from "../Reservations/ReservationDetail";
+import ReservationDetail from "../reservations/ReservationDetail";
 
 function SearchForm() {
   const [numberToBeSearched, setNumberToBeSearched] = useState({
