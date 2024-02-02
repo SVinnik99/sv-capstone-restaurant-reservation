@@ -3,8 +3,8 @@ import { listReservations } from "../utils/api";
 import { previous, next, today } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useLocation, useHistory } from "react-router-dom";
-import ReservationDetail from "../Reservations/ReservationDetail";
-import TableList from "../Tables/TableList";
+import ReservationDetail from "../reservations/ReservationDetail";
+import TableList from "../tables/TableList";
 import { listTables } from "../utils/api";
 
 /**
