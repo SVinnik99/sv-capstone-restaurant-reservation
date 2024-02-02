@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
-import NewReservation from "../Reservations/NewReservation";
+import NewReservation from "../reservations/NewReservation";
 import tables from "../tables";
 import Seat from "../Seat";
 import Search from "../Search";
