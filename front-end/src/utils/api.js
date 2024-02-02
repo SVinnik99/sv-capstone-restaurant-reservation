@@ -10,7 +10,7 @@ const API_BASE_URL =
 
   process.env.REACT_APP_API_BASE_URL || "https://restaurant-reservation-backend-k5h3.onrender.com";
 
-\
+
 /**
  * Defines the default headers for these functions to work with `json-server`
  */
@@ -62,13 +62,32 @@ async function fetchJson(url, options, onCancel) {
  */
 
 export async function listReservations(params, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations`);
-  Object.entries(params).forEach(([key, value]) =>
-    url.searchParams.append(key, value.toString())
-  );
-  return await fetchJson(url, { headers, signal }, [])
-    .then(formatReservationDate)
-    .then(formatReservationTime);
+  try {
+    const url = new URL(`${API_BASE_URL}/reservations`);
+    Object.entries(params).forEach(([key, value]) =>
+      url.searchParams.append(key, value.toString())
+    );
+
+    // Making the API request and handling the response
+    const response = await fetchJson(url, { headers, signal }, []);
+
+    if (!response.ok) {
+      // If the response status is not okay, throw an error with the status text
+      throw new Error(`Failed to fetch reservations: ${response.statusText}`);
+    }
+
+    // Assuming the response contains JSON data
+    const data = await response.json();
+
+    // Formatting the reservation data
+    const formattedData = formatReservationTime(formatReservationDate(data));
+
+    return formattedData;
+  } catch (error) {
+    // Handle any errors that occur during the request or formatting
+    console.error("Error in listReservations:", error);
+    throw error; // Rethrow the error for further handling in the calling code
+  }
 }
 
 export async function listTables(signal) {
