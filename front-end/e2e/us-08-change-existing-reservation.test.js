@@ -46,7 +46,7 @@ describe("US-08 - Change an existing reservation - E2E", () => {
   describe("/dashboard page", () => {
     beforeEach(async () => {
       await page.goto(dashboardTestPath, {
-        waitUntil: "networkidle0",
+        waitUntil: "networkidle2",
       });
     });
 

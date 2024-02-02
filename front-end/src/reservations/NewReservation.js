@@ -1,12 +1,11 @@
-import { Link, useHistory } from "react-router-dom";
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
-import "./NewReservation.css";
 import ErrorAlert from "../layout/ErrorAlert";
 
 function NewReservation() {
   const history = useHistory();
-  const [reservationError, setReservationError] = useState(false);
+
   const [reservation, setReservation] = useState({
     first_name: "",
     last_name: "",
@@ -15,6 +14,8 @@ function NewReservation() {
     reservation_time: "",
     people: "",
   });
+
+  const [reservationError, setReservationError] = useState(false);
 
   const handleChange = (event) => {
     let { name, value } = event.target;
@@ -26,16 +27,13 @@ function NewReservation() {
       [name]: value,
     }));
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const abortController = new AbortController();
-
     try {
-     await createReservation(reservation).then(() => {
-        event.preventDefault();
-        //goes back to the reservation date set in the form
-        history.push(`/dashboard/?date=${reservation.reservation_date}`);
-      });
+      await createReservation(reservation, abortController.signal);
+      history.push(`/dashboard?date=${reservation.reservation_date}`);
     } catch (error) {
       setReservationError(error);
     }
@@ -44,75 +42,104 @@ function NewReservation() {
 
   return (
     <>
-      
-    <div>
-      <h1>Create Deck</h1>
+      <h2>New Reservation</h2>
+      <ErrorAlert error={reservationError} />
 
       <form onSubmit={handleSubmit}>
-        <label>First Name</label>
+        <label htmlFor="first_name" className="mr-5 pr-4">
+          First name:
+        </label>
         <input
+          className="ml-5 mt-2"
+          type="text"
           id="first_name"
-          type="text"
           name="first_name"
-          onChange={handleChange}
           value={reservation.first_name}
+          onChange={handleChange}
+          required
         />
-        <label>Last Name</label>
+        <br />
+        <label htmlFor="last_name" className="mr-5 pr-4">
+          Last name:
+        </label>
         <input
+          className="ml-5 mt-2"
+          type="text"
           id="last_name"
-          type="text"
           name="last_name"
-          onChange={handleChange}
           value={reservation.last_name}
-        />
-        <label>Mobile Number</label>
-        <input
-          id="mobile_number"
-          type="text"
-          name="mobile_number"
           onChange={handleChange}
-          value={reservation.mobile_number}
+          required
         />
-        <label>Date of reservation</label>
+        <br />
+        <label htmlFor="mobile_number" className="mr-4 pr-3">
+          Mobile number:
+        </label>
         <input
-          id="reservation_date"
+          className="ml-5 mt-2"
+          type="text"
+          id="mobile_number"
+          name="mobile_number"
+          value={reservation.mobile_number}
+          onChange={handleChange}
+          minLength="10"
+          maxLength="10"
+          required
+        />
+        <br />
+        <label htmlFor="reservation_date" className="mr-4">
+          Reservation Date:
+        </label>
+        <input
+          className="ml-5 mt-2"
           type="date"
-          name="reservation_date"
           placeholder="YYYY-MM-DD"
           pattern="\d{4}-\d{2}-\d{2}"
-          onChange={handleChange}
+          id="reservation_date"
+          name="reservation_date"
           value={reservation.reservation_date}
+          onChange={handleChange}
+          required
         />
-        <label>Time of reservation</label>
+        <br />
+        <label htmlFor="reservation_time" className="mr-4">
+          Reservation Time:
+        </label>
         <input
-          id="reservation_time"
+          className="ml-5 mt-2"
           type="time"
-          name="reservation_time"
           placeholder="HH:MM"
           pattern="[0-9]{2}:[0-9]{2}"
-          onChange={handleChange}
+          id="reservation_time"
+          name="reservation_time"
           value={reservation.reservation_time}
-        />
-        <label>Number of people in the party</label>
-        <input
-          id="people"
-          type="number"
-          name="people"
           onChange={handleChange}
+          required
+        />
+        <br />
+        <label htmlFor="people">Number of people in party:</label>
+        <input
+          className="ml-2 mt-2"
+          type="number"
+          id="people"
+          name="people"
           value={reservation.people}
+          onChange={handleChange}
           required
           min="1"
         />
-
-        <button type="button" onClick={() => history.push("/")}>
+        <br />
+        <button className="btn btn-primary" type="submit">
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={() => history.goBack()}
+          className="btn btn-secondary ml-2"
+        >
           Cancel
         </button>
-
-        <button type="submit">Submit</button>
       </form>
-    </div>
-  
-    <ErrorAlert error={reservationError} />
     </>
   );
 }

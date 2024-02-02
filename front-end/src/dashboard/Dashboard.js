@@ -1,12 +1,11 @@
-import React, { useEffect, useState} from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
-import { today, previous, next } from "../utils/date-time";
+import { previous, next, today } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
-import ReservationView from "./ReservationView"
-import useQuery from "../utils/useQuery";
-import "./Dashboard.css"
-
+import { useLocation, useHistory } from "react-router-dom";
+import ReservationDetail from "../Reservations/ReservationDetail";
+import TableList from "../Tables/TableList";
+import { listTables } from "../utils/api";
 
 /**
  * Defines the dashboard page.
@@ -14,88 +13,157 @@ import "./Dashboard.css"
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard() {
-
-  let history = useHistory()
-  const query = useQuery()
-
+function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [queryDate, setQueryDate] = useState(query.get("date"))
-  let [currentDate, setCurrentDate] = useState(today())
+  const [currentDate, setCurrentDate] = useState(date);
+  const [tables, setTables] = useState([]);
 
-  useEffect(loadDashboard, [currentDate]);
+  const history = useHistory();
+  const location = useLocation();
+  const searchedDate = location.search.slice(-10);
+
+  useEffect(loadDashboard, [date]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations(currentDate, abortController.signal)
+    listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
   }
 
-  // gets the current date from the parameter
-  
-
-  // this use effect checks to the route, if it specifies a date, change the current date to the parameter
   useEffect(() => {
+    const abortController = new AbortController();
 
-    if (queryDate) {
-      setCurrentDate(queryDate);
+    async function loadReservations() {
+      try {
+        if (currentDate === date) {
+          const returnedReservations = await listReservations(
+            { date },
+            abortController.signal
+          );
+          setReservations(returnedReservations);
+        } else {
+          const returnedReservations = await listReservations(
+            { currentDate },
+            abortController.signal
+          );
+          setReservations(returnedReservations);
+        }
+      } catch (error) {
+        setReservationsError(error);
+      }
     }
+    loadReservations();
+    return () => abortController.abort();
+  }, [date, currentDate, history.location]);
 
-  }, [queryDate]);
+  // Load all tables
 
-  // Increments the day by 1 forwards
-  function handleNext() {
-    setCurrentDate(next(currentDate))
-  }
-  // Increments the day by 1 backwards
-  function handlePrevious() {
-    setCurrentDate(previous(currentDate))
-  }
-  // Brings you back to todays date, clear query param
-  function handleToday() {
-    setCurrentDate(today())
-    history.push("/dashboard")
-    
-  }
+  useEffect(() => {
+    const abortController = new AbortController();
 
+    async function loadTables() {
+      try {
+        const returnedTables = await listTables();
+        setTables(returnedTables);
+      } catch (error) {
+        setReservationsError(error);
+      }
+    }
+    loadTables();
+    return () => abortController.abort();
+  }, [history, date, currentDate]);
+
+  // Fetching the query parameter
+  useEffect(() => {
+    if (searchedDate && searchedDate !== "") {
+      setCurrentDate(searchedDate);
+    }
+  }, [searchedDate, history]);
+
+  // Change-date-button handlers
+
+  const handlePreviousDate = (event) => {
+    event.preventDefault();
+    history.push("/dashboard");
+    setCurrentDate(previous(currentDate));
+  };
+
+  const handleToday = (event) => {
+    event.preventDefault();
+    history.push("/dashboard");
+    setCurrentDate(today());
+  };
+
+  const handleNextDate = (event) => {
+    event.preventDefault();
+    history.push("/dashboard");
+    setCurrentDate(next(currentDate));
+  };
+
+  const refreshTables = () => {
+    const abortController = new AbortController();
+    listTables()
+      .then((returnedTables) => {
+        setTables(returnedTables);
+      })
+      .catch((error) => {
+        setReservationsError(error);
+      });
+    return () => abortController.abort();
+  };
 
   return (
     <main>
-      <h1>Dashboard</h1>
-      <div >
-        <h4 >Reservations for date: {currentDate} </h4>
-      </div>
       <div>
-        <button onClick={() => handlePrevious()} type="button" class="btn btn-secondary btn-sm">Previous day</button>
-        <button onClick={() => handleToday()} type="button" class="btn btn-primary btn-sm">Today</button>
-        <button onClick={() => handleNext()} type="button" class="btn btn-secondary btn-sm">Next day</button>
+        <h1>Dashboard</h1>
+        <div className="d-md-flex mb-3">
+          <h4 className="mb-0">Reservations for date: {currentDate}</h4>
+        </div>
+        <ErrorAlert error={reservationsError} />
+        <button onClick={handlePreviousDate} className="btn btn-primary mb-2">
+          Previous
+        </button>
+        <button onClick={handleToday} className="btn btn-munsell mb-2 ml-2">
+          Today
+        </button>
+        <button onClick={handleNextDate} className="btn btn-primary mb-2 ml-2">
+          Next
+        </button>
       </div>
-      <ErrorAlert error={reservationsError} />
-
-      <table>
+      <table className="table table-striped">
         <thead>
           <tr>
+            <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Mobile Number</th>
+            <th>People in Party</th>
+            <th>Mobile #</th>
             <th>Reservation Date</th>
             <th>Reservation Time</th>
-            <th>Number of People</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          {reservations.map((reservation, index) =>
-            <ReservationView
-              reservation={reservation}
-              currentDate={currentDate}
-              key={index} />)}
+          {reservations.map((res) => (
+            <ReservationDetail res={res} key={res.reservation_id} />
+          ))}
         </tbody>
       </table>
-
+      <br />
+      <div className="d-md-flex mb-3">
+        <h4 className="mb-0">Tables:</h4>
+      </div>
+      {tables.map((table) => (
+        <TableList
+          table={table}
+          key={table.table_id}
+          refreshTables={refreshTables}
+        />
+      ))}
     </main>
   );
 }

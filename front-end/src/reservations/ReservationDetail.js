@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { updateReservationStatus, listTables } from "../utils/api";
 
-function ReservationView({ res }) {
+function ReservationDetail({ res }) {
   const [reservation, setReservation] = useState(res);
   const [error, setError] = useState(null);
   const history = useHistory();
@@ -55,7 +55,7 @@ function ReservationView({ res }) {
               href={`/reservations/${reservation_id}/seat`}
               className="btn btn-primary"
             >
-              <button>Seat</button>
+              Seat
             </a>
           ) : (
             <></>
@@ -75,9 +75,9 @@ function ReservationView({ res }) {
         </td>
         <td data-reservation-id-cancel={reservation.reservation_id}>
           {reservation.status === "booked" ? (
-            <a className="btn btn-danger" onClick={handleCancelRes}>
+            <button className="btn btn-danger" onClick={handleCancelRes}>
               Cancel
-            </a>
+            </button>
           ) : (
             <></>
           )}
@@ -87,4 +87,4 @@ function ReservationView({ res }) {
   );
 }
 
-export default ReservationView;
+export default ReservationDetail;
