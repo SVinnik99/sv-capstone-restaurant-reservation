@@ -23,7 +23,7 @@ function Dashboard({ date }) {
   const location = useLocation();
   const searchedDate = location.search.slice(-10);
 
-  useEffect(loadDashboard, [date],[]);
+  useEffect(loadDashboard, [date]);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -58,7 +58,7 @@ function Dashboard({ date }) {
     }
     loadReservations();
     return () => abortController.abort();
-  }, [date, currentDate, reservations.reservation_id]);
+  }, [date, currentDate, reservations]);
 
   // Load all tables
 
