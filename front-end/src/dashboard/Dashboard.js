@@ -58,7 +58,7 @@ function Dashboard({ date }) {
     }
     loadReservations();
     return () => abortController.abort();
-  }, [date, currentDate]);
+  }, [date, currentDate, reservations.reservation_id]);
 
   // Load all tables
 
